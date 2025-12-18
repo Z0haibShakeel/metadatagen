@@ -1,0 +1,5 @@
+{
+  "name": "MetadataGen",
+  "description": "A modern, editor-style web application to generate image metadata (titles, descriptions, keywords) in bulk using the Groq API.",
+  "requestFramePermissions": []
+}
