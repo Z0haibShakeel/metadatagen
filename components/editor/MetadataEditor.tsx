@@ -124,28 +124,52 @@ export const MetadataEditor: React.FC<MetadataEditorProps> = ({
         <div className="flex-1 overflow-y-auto p-8 space-y-10">
             {/* Title */}
             <div className="max-w-4xl">
-                <FieldHeader label="Optimized Title" count={getFullTitle().length} limit={customization.titleLength} fieldName="title" textToCopy={getFullTitle()} />
-                <textarea
-                    className="w-full text-xl font-bold text-gray-900 bg-white border-none focus:ring-0 placeholder:text-gray-200 resize-none leading-tight"
-                    value={item.metadata.title}
-                    onChange={e => onUpdate(item.id, 'title', e.target.value)}
-                    onBlur={() => onSnapshot(item.id)}
-                    placeholder="Enter descriptive title..."
-                    rows={2}
-                />
+                <FieldHeader label="Title" count={getFullTitle().length} limit={customization.titleLength} fieldName="title" textToCopy={getFullTitle()} />
+                <div className="flex flex-col border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-400 transition-all bg-white shadow-sm">
+                    {customization.titlePrefix && (
+                        <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 text-xs font-mono text-gray-500 select-none">
+                            {customization.titlePrefix}
+                        </div>
+                    )}
+                    <textarea
+                        className="w-full text-xl font-bold text-gray-900 bg-white border-none focus:ring-0 placeholder:text-gray-200 resize-none leading-tight p-4 block"
+                        value={item.metadata.title}
+                        onChange={e => onUpdate(item.id, 'title', e.target.value)}
+                        onBlur={() => onSnapshot(item.id)}
+                        placeholder="Enter descriptive title..."
+                        rows={2}
+                    />
+                    {customization.titleSuffix && (
+                        <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-xs font-mono text-gray-500 select-none text-right">
+                            {customization.titleSuffix}
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-4xl">
                 {/* Description */}
                 <div>
                     <FieldHeader label="Description" count={getFullDesc().length} limit={customization.descriptionLength} fieldName="description" textToCopy={getFullDesc()} />
-                    <textarea
-                        className="w-full h-40 p-4 text-sm text-gray-600 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-blue-300 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all placeholder:text-gray-300 leading-relaxed"
-                        value={item.metadata.description}
-                        onChange={e => onUpdate(item.id, 'description', e.target.value)}
-                        onBlur={() => onSnapshot(item.id)}
-                        placeholder="Detailed visual description..."
-                    />
+                    <div className="flex flex-col border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-400 transition-all bg-white shadow-sm h-full">
+                         {customization.descriptionPrefix && (
+                            <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 text-xs font-mono text-gray-500 select-none">
+                                {customization.descriptionPrefix}
+                            </div>
+                        )}
+                        <textarea
+                            className="w-full flex-1 p-4 text-sm text-gray-600 bg-white border-none focus:ring-0 outline-none transition-all placeholder:text-gray-300 leading-relaxed resize-none"
+                            value={item.metadata.description}
+                            onChange={e => onUpdate(item.id, 'description', e.target.value)}
+                            onBlur={() => onSnapshot(item.id)}
+                            placeholder="Detailed visual description..."
+                        />
+                         {customization.descriptionSuffix && (
+                            <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-xs font-mono text-gray-500 select-none text-right">
+                                {customization.descriptionSuffix}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Right Sub-Col (Category & Tags) */}

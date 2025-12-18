@@ -29,6 +29,9 @@ export default function App() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   
+  // UI State
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
   // Toast State
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const addToast = (title: string, message: string, type: 'success' | 'error' | 'warning' | 'info') => {
@@ -240,9 +243,16 @@ export default function App() {
                     {isUploading && <LoadingOverlay />}
 
                     {/* 1. LEFT NAVIGATOR (Assets) */}
-                    <div className="w-72 bg-white border-r border-gray-200 flex flex-col shrink-0 hidden lg:flex">
-                        <div className="h-12 flex items-center px-4 border-b border-gray-100 bg-gray-50/30">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Navigator</span>
+                    <div className={`${isSidebarCollapsed ? 'w-20' : 'w-72'} bg-white border-r border-gray-200 flex flex-col shrink-0 hidden lg:flex transition-all duration-300`}>
+                        <div className={`h-12 flex items-center border-b border-gray-100 bg-gray-50/30 ${isSidebarCollapsed ? 'justify-center px-0' : 'justify-between px-4'}`}>
+                            {!isSidebarCollapsed && <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Navigator</span>}
+                            <button 
+                                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} 
+                                className="p-1.5 rounded-md hover:bg-gray-200 text-gray-500"
+                                title={isSidebarCollapsed ? "Expand Navigator" : "Collapse Navigator"}
+                            >
+                                {isSidebarCollapsed ? <Icons.ArrowLeft className="w-3.5 h-3.5 rotate-180" /> : <Icons.Menu className="w-3.5 h-3.5" />}
+                            </button>
                         </div>
                         <div className="flex-1 overflow-hidden relative">
                             <AssetList 
@@ -252,29 +262,37 @@ export default function App() {
                                 onRemove={removeItem}
                                 onAdd={addFiles}
                                 isUploading={isUploading}
+                                isCollapsed={isSidebarCollapsed}
                             />
                         </div>
-                        <div className="p-4 border-t border-gray-100 bg-white">
+                        <div className={`p-4 border-t border-gray-100 bg-white ${isSidebarCollapsed ? 'px-2' : ''}`}>
                             {!session ? (
-                                <Button className="w-full h-10 text-xs bg-gray-900 text-white" onClick={() => openAuth('register')}>
-                                    <Icons.Lock className="w-3.5 h-3.5 mr-2" /> Login to Start
+                                <Button className={`w-full h-10 text-xs bg-gray-900 text-white ${isSidebarCollapsed ? 'px-0' : ''}`} onClick={() => openAuth('register')}>
+                                    {isSidebarCollapsed ? <Icons.Lock className="w-3.5 h-3.5" /> : <><Icons.Lock className="w-3.5 h-3.5 mr-2" /> Login to Start</>}
                                 </Button>
                             ) : !hasActiveKey ? (
-                                <Button className="w-full h-10 text-xs bg-orange-500 hover:bg-orange-600 text-white" onClick={() => handleNavigate('profile', 'api')}>
-                                    <Icons.Key className="w-3.5 h-3.5 mr-2" /> Connect API
+                                <Button className={`w-full h-10 text-xs bg-orange-500 hover:bg-orange-600 text-white ${isSidebarCollapsed ? 'px-0' : ''}`} onClick={() => handleNavigate('profile', 'api')}>
+                                     {isSidebarCollapsed ? <Icons.Key className="w-3.5 h-3.5" /> : <><Icons.Key className="w-3.5 h-3.5 mr-2" /> Connect API</>}
                                 </Button>
                             ) : !isProcessing ? (
                                 <Button 
-                                    className="w-full h-10 text-xs shadow-lg bg-gray-900 hover:bg-black text-white"
+                                    className={`w-full h-10 text-xs shadow-lg bg-gray-900 hover:bg-black text-white ${isSidebarCollapsed ? 'px-0' : ''}`}
                                     onClick={handleQueueStart}
                                     disabled={items.length === 0 || isUploading || !canAfford}
+                                    title="Start Generation"
                                 >
-                                    <Icons.Play className="w-3.5 h-3.5 mr-2 fill-current" />
-                                    Generate ({pendingItemsCount})
+                                    {isSidebarCollapsed ? (
+                                        <div className="relative">
+                                            <Icons.Play className="w-3.5 h-3.5 fill-current" />
+                                            {pendingItemsCount > 0 && <div className="absolute -top-2 -right-2 w-3 h-3 bg-red-500 rounded-full" />}
+                                        </div>
+                                    ) : (
+                                        <><Icons.Play className="w-3.5 h-3.5 mr-2 fill-current" /> Generate ({pendingItemsCount})</>
+                                    )}
                                 </Button>
                             ) : (
-                                <Button className="w-full h-10 text-xs" variant="danger" onClick={stopQueue}>
-                                    <Icons.Loader className="w-3.5 h-3.5 mr-2 animate-spin" /> Stop
+                                <Button className={`w-full h-10 text-xs ${isSidebarCollapsed ? 'px-0' : ''}`} variant="danger" onClick={stopQueue}>
+                                    {isSidebarCollapsed ? <Icons.Loader className="w-3.5 h-3.5 animate-spin" /> : <><Icons.Loader className="w-3.5 h-3.5 mr-2 animate-spin" /> Stop</>}
                                 </Button>
                             )}
                         </div>

@@ -68,6 +68,25 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({ customization, setCust
             </div>
        </ConfigSection>
 
+       <ConfigSection title="Description Constraints" icon={Icons.AlignLeft} disabled={disabled}>
+            <div className="space-y-4">
+                <div className="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-lg border border-gray-100">
+                    <Label className="mb-0 text-[10px]">Max Chars</Label>
+                    <span className="text-xs font-bold text-gray-900">{customization.descriptionLength}</span>
+                </div>
+                <input 
+                    type="range" min={50} max={300} step={10}
+                    value={customization.descriptionLength} 
+                    onChange={(e) => updateCust('descriptionLength', parseInt(e.target.value))}
+                    className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                />
+                <div className="grid grid-cols-2 gap-2">
+                    <Input placeholder="Prefix..." value={customization.descriptionPrefix} onChange={(e) => updateCust('descriptionPrefix', e.target.value)} className="text-[10px] h-8 bg-gray-50" />
+                    <Input placeholder="Suffix..." value={customization.descriptionSuffix} onChange={(e) => updateCust('descriptionSuffix', e.target.value)} className="text-[10px] h-8 bg-gray-50" />
+                </div>
+            </div>
+       </ConfigSection>
+
        <ConfigSection title="Keywords Strategy" icon={Icons.Tag} disabled={disabled}>
             <div className="space-y-4">
                 <div className="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-lg border border-gray-100">

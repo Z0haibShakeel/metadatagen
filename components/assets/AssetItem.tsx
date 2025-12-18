@@ -8,9 +8,36 @@ interface AssetItemProps {
   isSelected: boolean;
   onSelect: () => void;
   onRemove: (e: React.MouseEvent) => void;
+  isCompact?: boolean;
 }
 
-export const AssetItem: React.FC<AssetItemProps> = ({ item, isSelected, onSelect, onRemove }) => {
+export const AssetItem: React.FC<AssetItemProps> = ({ item, isSelected, onSelect, onRemove, isCompact = false }) => {
+  if (isCompact) {
+      return (
+        <div 
+            onClick={onSelect} 
+            className={`group relative w-full aspect-square rounded-lg cursor-pointer transition-all duration-200 border overflow-hidden ${
+                isSelected 
+                ? 'border-gray-900 shadow-md ring-1 ring-gray-900/10' 
+                : 'border-transparent hover:border-gray-200'
+            }`}
+            title={item.file.name}
+        >
+            <img src={item.previewUrl} className={`w-full h-full object-cover ${isSelected ? 'opacity-80' : ''}`}/>
+            {item.mediaType === 'video' && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
+                    <Icons.Play className="w-3 h-3 text-white fill-white" />
+                </div>
+            )}
+            <div className={`absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white ${
+                item.status === 'completed' ? 'bg-green-500' : 
+                item.status === 'processing' ? 'bg-blue-500 animate-pulse' : 
+                item.status === 'error' ? 'bg-red-500' : 'bg-gray-300'
+            }`} />
+        </div>
+      );
+  }
+
   return (
     <div 
         onClick={onSelect} 
